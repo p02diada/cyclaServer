@@ -13,24 +13,16 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url, include
-from rest_framework import routers
-from usuarios.views import CiclistaViewSet, RemitenteViewSet, UserViewSet
-from envios.views import AnuncioViewSet, OfertaViewSet, EnvioViewSet
+from django.conf.urls import include, url
 from django.contrib import admin
+from django.conf.urls.static import static
+from django.conf import settings
+from rest_framework.authtoken import views
 
-router = routers.DefaultRouter()
-router.register(r'usuarios', UserViewSet)
-router.register(r'ciclistas', CiclistaViewSet)
-router.register(r'remitente', RemitenteViewSet)
-router.register(r'anuncios', AnuncioViewSet)
-router.register(r'ofertas', OfertaViewSet)
-router.register(r'envios', EnvioViewSet)
-
-# Wire up our API using automatic URL routing.
-# Additionally, we include login URLs for the browsable API.
 urlpatterns = [
-    url(r'^', include(router.urls)),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
-]
+    url(r'^usuarios/', include('usuarios.urls', namespace="usuarios")),
+#    url(r'^envios/', include('envios.urls', namespace="envios")),
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^api-token-auth/', views.obtain_auth_token),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
