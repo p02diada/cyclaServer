@@ -12,7 +12,7 @@ from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -21,16 +21,19 @@ from rest_framework import status
 #    Token.objects.get_or_create(user=user)
 
 #Crea tokens para los usuarios nuevos
-@receiver(post_save, sender=settings.AUTH_USER_MODEL)
-def create_auth_token(sender, instance=None, created=False, **kwargs):
-    if created:
-        Token.objects.create(user=instance)
+#@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+#def create_auth_token(sender, instance=None, created=False, **kwargs):
+#    print "EEEEEEEEEEEEEEEE"
+#    if created:
+#        Token.objects.create(user=instance)
 
 @api_view(['POST','PUT'])
+#@authentication_classes((TokenAuthentication,))
+#@permission_classes((IsAuthenticated,))
 def registrarCiclista(request):
 
     """
-    Vista que nos permite crear un nuevo usuario.
+    Vista que nos permite crear un nuevo Ciclista.
     """
 
 
@@ -41,8 +44,11 @@ def registrarCiclista(request):
         serializer = CiclistaSerializer(data=request.data)
         print serializer       
         if serializer.is_valid():
-            serializer.save()
-            #print guardado
+            #Para crear el token del nuevo ciclista
+            guardado=serializer.save()
+            usuario=User.objects.get(username=guardado)
+            token=Token.objects.create(user=usuario)
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -50,18 +56,15 @@ def registrarCiclista(request):
 def registrarRemitente(request):
 
     """
-    Vista que nos permite crear un nuevo usuario.
+    Vista que nos permite crear un nuevo Remitente.
     """
-
-
-    #ciclista = Ciclista.objects.get(username=request.user)
-
-    print request.user
     if request.method == 'POST':
         serializer = RemitenteSerializer(data=request.data)
-        
         if serializer.is_valid():
-            serializer.save()
+            #Para crear el token del nuevo remitente
+            guardado=serializer.save()
+            usuario=User.objects.get(username=guardado)
+            token=Token.objects.create(user=usuario)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
