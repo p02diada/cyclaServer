@@ -47,6 +47,10 @@ def registrarCiclista(request):
             #Para crear el token del nuevo ciclista
             guardado=serializer.save()
             usuario=User.objects.get(username=guardado)
+            #no se activaba por defecto
+            usuario.is_active=True
+            usuario.save()
+            #Para crear el token del nuevo ciclista
             token=Token.objects.create(user=usuario)
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -64,9 +68,33 @@ def registrarRemitente(request):
             #Para crear el token del nuevo remitente
             guardado=serializer.save()
             usuario=User.objects.get(username=guardado)
+            #no se activaba por defecto
+            usuario.is_active=True
+            usuario.save()
+            #User.objects.get(username=guardado).update(is_active=True)
             token=Token.objects.create(user=usuario)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def getTipoUsuario(request, username):
+
+    try:
+        remitente=Remitente.objects.get(username=username)
+    except Remitente.DoesNotExist:
+        remitente=None
+
+    if remitente:
+        content = {
+            'esRemitente': True
+        }
+        return Response(content)
+    else:
+        content = {
+            'esRemitente': False
+        }
+        return Response(content)
+
 
 
 class UserViewSet(viewsets.ModelViewSet):

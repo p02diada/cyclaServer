@@ -22,7 +22,7 @@ from rest_framework.authtoken import views
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^usuarios/', include('usuarios.urls', namespace="usuarios")),
-#    url(r'^envios/', include('envios.urls', namespace="envios")),
+    url(r'^envios/', include('envios.urls', namespace="envios")),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api-token-auth/', views.obtain_auth_token),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
