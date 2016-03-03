@@ -95,6 +95,20 @@ def getTipoUsuario(request, username):
         }
         return Response(content)
 
+@api_view(['GET'])
+def getIdUsuario(request, username):
+
+    try:
+        usuario=Remitente.objects.get(username=username)
+    except Remitente.DoesNotExist:
+        usuario=Ciclista.objects.get(username=username)
+   
+    content = {
+       'id_usuario': usuario.pk
+    }
+    return Response(content)
+
+
 
 
 class UserViewSet(viewsets.ModelViewSet):

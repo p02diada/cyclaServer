@@ -18,7 +18,7 @@ class Anuncio(models.Model):
 
 
 	def __unicode__(self):
-		return self.descripcion
+		return unicode(self.descripcion)
 
 
 class Oferta(models.Model):

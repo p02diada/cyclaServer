@@ -9,5 +9,6 @@ urlpatterns = [
      url(r'^registrarCiclista/$', views.registrarCiclista),
      url(r'^registrarRemitente/$', views.registrarRemitente),
      url(r'^getTipoUsuario/(?P<username>\w+)/$', views.getTipoUsuario),
+     url(r'^getIdUsuario/(?P<username>\w+)/$', views.getIdUsuario),
      #url(r'^dameUsuario/$', views.dameUsuario),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
