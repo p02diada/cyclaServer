@@ -9,6 +9,10 @@ urlpatterns = [
 #    url(r'^user/(?P<pk>[0-9]+)/$', views.usuarios_detail),
      url(r'^crearAnuncio/$', views.crearAnuncio),
      url(r'^getAnuncios/$', views.getAnuncios),
+     url(r'^crearOferta/$', views.crearOferta),
+     url(r'^getMisAnuncios/$', views.getMisAnuncios),
+     url(r'^getOfertasParaAnuncio/$', views.getOfertasParaAnuncio),
+     
 
      #url(r'^registrarRemitente/$', views.registrarRemitente),
      #url(r'^dameUsuario/$', views.dameUsuario),

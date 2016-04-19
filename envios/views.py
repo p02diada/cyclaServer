@@ -51,6 +51,8 @@ def getAnuncios(request):
 
 
 	anuncios=Anuncio.objects.all()
+	lista_anuncios=[]
+	lista_distancias=[]
 
 	for anuncio in anuncios:
 		latitud=anuncio.latitudPuntoFinal
@@ -81,9 +83,13 @@ def getAnuncios(request):
 
 		sumaMetros=diferenciaLatitudMetros+diferenciaLongitudMetros
 
-		distacia=math.sqrt(sumaMetros)
+		distancia=math.sqrt(sumaMetros)
 		print "distancia: "
-		print distacia
+		print distancia
+		if distancia<20000:
+			lista_anuncios.append(anuncio)
+			lista_distancias.append(distancia)
+
 
 
 
@@ -93,6 +99,52 @@ def getAnuncios(request):
 
 	serializer=AnuncioSerializer(anuncios, many=True)
 	return Response(serializer.data)
+
+
+@api_view(['POST','PUT', 'GET'])
+@authentication_classes((TokenAuthentication,))
+@permission_classes((IsAuthenticated,))
+def getMisAnuncios(request):
+
+	id_usuario=request.POST.get('id_usuario','')
+	anuncios=Anuncio.objects.filter(remitente=id_usuario)
+	serializer=AnuncioSerializer(anuncios, many=True)
+	return Response(serializer.data)
+
+@api_view(['POST','PUT', 'GET'])
+@authentication_classes((TokenAuthentication,))
+@permission_classes((IsAuthenticated,))
+def getOfertasParaAnuncio(request):
+
+	id_anuncio=request.POST.get('id_anuncio','')
+	ofertas=Oferta.objects.filter(anuncio=id_anuncio)
+	serializer=OfertaSerializer(ofertas, many=True)
+	return Response(serializer.data)
+
+	
+@api_view(['POST','PUT', 'GET'])
+@authentication_classes((TokenAuthentication,))
+@permission_classes((IsAuthenticated,))
+def crearOferta(request):
+
+    """
+    Vista que nos permite crear un nuevo Anuncio.
+    """
+    #ciclista = Ciclista.objects.get(username=request.user)
+
+    print request.user
+    print "dentrooooo"
+    if request.method == 'POST':
+    	print "dentro del iff"
+        serializer = OfertaSerializer(data=request.data)
+        print serializer       
+        if serializer.is_valid():
+
+            print "serializer valido"
+            serializer.save()
+
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class AnuncioViewSet (viewsets.ModelViewSet):
 	"""
