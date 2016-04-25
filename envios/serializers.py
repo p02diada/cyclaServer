@@ -13,7 +13,7 @@ class OfertaSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Oferta
-		fields = ('anuncio', 'ciclista', 'precio')
+		fields = ('pk','anuncio', 'ciclista', 'precio')
 
 class EnvioSerializer(serializers.ModelSerializer):
 

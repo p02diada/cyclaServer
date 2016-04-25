@@ -7,6 +7,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
+from usuarios.models import Ciclista, Remitente
+from usuarios.serializers import CiclistaSerializer
 import math
 # Create your views here.
 
@@ -115,11 +117,26 @@ def getMisAnuncios(request):
 @authentication_classes((TokenAuthentication,))
 @permission_classes((IsAuthenticated,))
 def getOfertasParaAnuncio(request):
-
+	listaDatosCiclista=[]
 	id_anuncio=request.POST.get('id_anuncio','')
 	ofertas=Oferta.objects.filter(anuncio=id_anuncio)
-	serializer=OfertaSerializer(ofertas, many=True)
-	return Response(serializer.data)
+	for oferta in ofertas:
+		print oferta
+		print oferta.ciclista
+		datosCiclista=Ciclista.objects.get(pk=oferta.ciclista)
+		print datosCiclista.pk
+		print datosCiclista.valoracionMedia
+		listaDatosCiclista.append(datosCiclista)
+
+	print listaDatosCiclista
+	serializerCiclista=CiclistaSerializer(listaDatosCiclista, many=True)
+	serializerOferta=OfertaSerializer(ofertas, many=True)
+	content={
+		'listaOfertas': serializerOferta.data,
+		'listaDatosCiclista': serializerCiclista.data
+
+	}
+	return Response(content)
 
 	
 @api_view(['POST','PUT', 'GET'])
@@ -145,6 +162,19 @@ def crearOferta(request):
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST','PUT', 'GET'])
+@authentication_classes((TokenAuthentication,))
+@permission_classes((IsAuthenticated,))
+def aceptarOferta(request):
+	id_anuncio=request.POST.get('id_anuncio','')
+	id_oferta=request.POST.get('id_oferta','')
+	anuncio=Anuncio.objects.get(pk=id_anuncio)
+	oferta=Oferta.objects.get(pk=id_oferta)
+	#Oferta.objects.filter(anuncio=id_anuncio).delete()
+	#anuncio.delete()
+
+
 
 class AnuncioViewSet (viewsets.ModelViewSet):
 	"""

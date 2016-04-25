@@ -108,6 +108,18 @@ def getIdUsuario(request, username):
     }
     return Response(content)
 
+@api_view(['POST'])
+def getDatosCiclistaPorId(request):
+
+    id_ciclista=request.POST.get('id_ciclista','')
+    ciclista=Ciclista.objects.get(pk=id_ciclista)
+    print ciclista
+    content={
+        'username':ciclista.username,
+        'valoracionMedia':ciclista.valoracionMedia
+    }
+    return Response(content)
+
 
 
 

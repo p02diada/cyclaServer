@@ -12,6 +12,7 @@ urlpatterns = [
      url(r'^crearOferta/$', views.crearOferta),
      url(r'^getMisAnuncios/$', views.getMisAnuncios),
      url(r'^getOfertasParaAnuncio/$', views.getOfertasParaAnuncio),
+     url(r'^aceptarOferta/$', views.aceptarOferta),
      
 
      #url(r'^registrarRemitente/$', views.registrarRemitente),
