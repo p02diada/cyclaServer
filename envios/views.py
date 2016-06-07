@@ -9,6 +9,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from usuarios.models import Ciclista, Remitente
 from usuarios.serializers import CiclistaSerializer
+from django.core import serializers
 import math
 # Create your views here.
 
@@ -52,7 +53,7 @@ def getAnuncios(request):
 
 
 
-	anuncios=Anuncio.objects.all()
+	anuncios=Anuncio.objects.filter(estado='activo')
 	lista_anuncios=[]
 	lista_distancias=[]
 
@@ -109,7 +110,7 @@ def getAnuncios(request):
 def getMisAnuncios(request):
 
 	id_usuario=request.POST.get('id_usuario','')
-	anuncios=Anuncio.objects.filter(remitente=id_usuario)
+	anuncios=Anuncio.objects.filter(remitente=id_usuario, estado='activo')
 	serializer=AnuncioSerializer(anuncios, many=True)
 	return Response(serializer.data)
 
@@ -171,9 +172,87 @@ def aceptarOferta(request):
 	id_oferta=request.POST.get('id_oferta','')
 	anuncio=Anuncio.objects.get(pk=id_anuncio)
 	oferta=Oferta.objects.get(pk=id_oferta)
-	#Oferta.objects.filter(anuncio=id_anuncio).delete()
-	#anuncio.delete()
+	print oferta
+	Oferta.objects.filter(anuncio=id_anuncio).exclude(pk=id_oferta).delete()
+	anuncio.estado='caducado'
+	anuncio.save()
+	envio= Envio.objects.create(oferta=oferta, anuncio=anuncio)
+	print envio.estado
+	print envio.oferta
+	print envio.anuncio
+	content={
+		'envio': "ok",
+		
 
+	}
+	return Response(content)
+
+@api_view(['POST','PUT', 'GET'])
+@authentication_classes((TokenAuthentication,))
+@permission_classes((IsAuthenticated,))
+def getEnviosRemitente(request):
+	id_usuario=request.POST.get('id_usuario','')
+	listaAnuncios=[]
+	
+	anuncios=Anuncio.objects.filter(estado='caducado').filter(remitente=id_usuario)
+
+	envios=Envio.objects.filter(anuncio=anuncios)
+	#for envio in envios:
+	#	anuncio=Anuncio.objects.get(pk=envio.anuncio.pk)
+	#	listaAnuncios.append(anuncio)
+
+
+
+	listaEnvios=EnvioSerializer(envios, many=True)
+	#listaAnuncios=AnuncioSerializer(listaAnuncios, many=True)
+	listaAnuncios=AnuncioSerializer(anuncios, many=True)
+
+	content={
+		'listaEnvios': listaEnvios.data,
+		'listaAnuncios': listaAnuncios.data,
+	}
+	return Response(content)
+
+@api_view(['POST','PUT', 'GET'])
+@authentication_classes((TokenAuthentication,))
+@permission_classes((IsAuthenticated,))
+def getAnuncioPorId(request):
+	id_anuncio=request.POST.get('id_anuncio','')
+	anuncio=Anuncio.objects.get(pk=id_anuncio)
+	print anuncio
+	anuncio=AnuncioSerializer(anuncio)
+	print anuncio.data
+	content={
+		'anuncio':anuncio.data
+	}
+	return Response(content)
+
+@api_view(['POST','PUT', 'GET'])
+@authentication_classes((TokenAuthentication,))
+@permission_classes((IsAuthenticated,))
+def getOfertaPorId(request):
+	id_oferta=request.POST.get('id_oferta','')
+	oferta=Oferta.objects.get(pk=id_oferta)
+	print oferta
+	oferta=OfertaSerializer(oferta)
+	print oferta.data
+	content={
+		'oferta':oferta.data
+	}
+	return Response(content)		
+
+@api_view(['POST','PUT', 'GET'])
+@authentication_classes((TokenAuthentication,))
+@permission_classes((IsAuthenticated,))
+def getPosicionCiclistaPorId(request):
+	id_ciclista=request.POST.get('id_ciclista','')
+	ciclista=Ciclista.objects.get(pk=id_ciclista)
+	print ciclista.latitudUltimoPunto
+	content={
+		'longitudCiclista':ciclista.longitudUltimoPunto,
+		'latitudCiclista':ciclista.latitudUltimoPunto,
+	}
+	return Response(content)
 
 
 class AnuncioViewSet (viewsets.ModelViewSet):

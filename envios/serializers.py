@@ -19,5 +19,5 @@ class EnvioSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Envio
-		fields = "__all__"
+		fields = ('pk', 'estado', 'oferta', 'anuncio')
 

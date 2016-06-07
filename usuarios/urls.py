@@ -11,5 +11,6 @@ urlpatterns = [
      url(r'^getTipoUsuario/(?P<username>\w+)/$', views.getTipoUsuario),
      url(r'^getIdUsuario/(?P<username>\w+)/$', views.getIdUsuario),
      url(r'^getDatosCiclistaPorId/$', views.getDatosCiclistaPorId),
+     url(r'^setPosicionCiclista/$', views.setPosicionCiclista),
      #url(r'^dameUsuario/$', views.dameUsuario),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

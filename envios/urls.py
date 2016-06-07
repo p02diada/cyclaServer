@@ -13,6 +13,11 @@ urlpatterns = [
      url(r'^getMisAnuncios/$', views.getMisAnuncios),
      url(r'^getOfertasParaAnuncio/$', views.getOfertasParaAnuncio),
      url(r'^aceptarOferta/$', views.aceptarOferta),
+     url(r'^getEnviosRemitente/$', views.getEnviosRemitente),
+     url(r'^getAnuncioPorId/$', views.getAnuncioPorId),
+     url(r'^getOfertaPorId/$', views.getOfertaPorId),
+     url(r'^getPosicionCiclistaPorId/$', views.getPosicionCiclistaPorId),
+
      
 
      #url(r'^registrarRemitente/$', views.registrarRemitente),

@@ -36,6 +36,8 @@ class Ciclista(User):
     """
     
     valoracionMedia= models.IntegerField(null=True, blank=True)
+    latitudUltimoPunto= models.CharField(max_length=50, null=True, blank=True)
+    longitudUltimoPunto= models.CharField(max_length=50, null=True, blank=True)
 
     def __unicode__(self):
         return self.username

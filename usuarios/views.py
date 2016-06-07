@@ -120,6 +120,21 @@ def getDatosCiclistaPorId(request):
     }
     return Response(content)
 
+@api_view(['POST'])
+def setPosicionCiclista(request):
+    longitud_ciclista=request.POST.get('longitud_ciclista','')
+    latitud_ciclista=request.POST.get('latitud_ciclista','')
+    id_ciclista=request.POST.get('id_ciclista','')
+    ciclista=Ciclista.objects.get(pk=id_ciclista)
+    ciclista.longitudUltimoPunto=longitud_ciclista
+    ciclista.latitudUltimoPunto=latitud_ciclista
+    ciclista.save()
+
+    content={
+        'response':'ok'
+    }
+    return Response(content)
+
 
 
 

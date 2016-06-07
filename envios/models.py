@@ -8,6 +8,11 @@ class Anuncio(models.Model):
 	"""
 		Clase que representa un anuncio publicado por un Remitente
 	"""
+	ESTADOS_ANUNCIO=(
+		('caducado', 'caducado'),
+		('activo', 'activo'),
+		
+	)
 
 	remitente= models.ForeignKey(Remitente)
 	descripcion=models.TextField(null = True, blank = True)
@@ -15,6 +20,7 @@ class Anuncio(models.Model):
 	longitudPuntoInicial= models.CharField(max_length=50)
 	latitudPuntoFinal= models.CharField(max_length=50)
 	longitudPuntoFinal= models.CharField(max_length=50)
+	estado=models.CharField(max_length=50, choices=ESTADOS_ANUNCIO, default='activo')
 
 
 	def __unicode__(self):
@@ -29,6 +35,8 @@ class Oferta(models.Model):
 	ciclista=models.ForeignKey(Ciclista)
 	precio = models.IntegerField()
 
+	def __unicode__(self):
+		return unicode(self.precio)
 
 
 class Envio(models.Model):
@@ -41,7 +49,7 @@ class Envio(models.Model):
 		('entregado', 'entregado'),
 	)
 
-	estado=models.CharField(max_length=50, choices=TIPOS_ESTADOS)
+	estado=models.CharField(max_length=50, choices=TIPOS_ESTADOS, default='esperando')
 	oferta=models.ForeignKey(Oferta)
 	anuncio=models.ForeignKey(Anuncio)
 
