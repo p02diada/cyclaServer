@@ -197,14 +197,9 @@ def getEnviosRemitente(request):
 	anuncios=Anuncio.objects.filter(estado='caducado').filter(remitente=id_usuario)
 
 	envios=Envio.objects.filter(anuncio=anuncios)
-	#for envio in envios:
-	#	anuncio=Anuncio.objects.get(pk=envio.anuncio.pk)
-	#	listaAnuncios.append(anuncio)
-
-
 
 	listaEnvios=EnvioSerializer(envios, many=True)
-	#listaAnuncios=AnuncioSerializer(listaAnuncios, many=True)
+
 	listaAnuncios=AnuncioSerializer(anuncios, many=True)
 
 	content={
@@ -212,6 +207,33 @@ def getEnviosRemitente(request):
 		'listaAnuncios': listaAnuncios.data,
 	}
 	return Response(content)
+
+@api_view(['POST','PUT', 'GET'])
+@authentication_classes((TokenAuthentication,))
+@permission_classes((IsAuthenticated,))
+def getEnviosCiclista(request):
+	id_usuario=request.POST.get('id_usuario','')
+
+	ofertas=Oferta.objects.filter(ciclista=id_usuario)
+
+	envios=Envio.objects.filter(oferta=ofertas)
+
+	anuncio=Anuncio.objects.get(pk=envios[0].anuncio.pk)
+	oferta=Oferta.objects.get(pk=envios[0].oferta.pk)
+
+	envioSer=EnvioSerializer(envios[0])
+	anuncioSer=AnuncioSerializer(anuncio)
+	ofertaSer=OfertaSerializer(oferta)
+
+
+
+	content={
+		'envio':envioSer.data,
+		'anuncio':anuncioSer.data,
+		'oferta':ofertaSer.data,
+	}
+	return Response(content)
+
 
 @api_view(['POST','PUT', 'GET'])
 @authentication_classes((TokenAuthentication,))
@@ -251,6 +273,21 @@ def getPosicionCiclistaPorId(request):
 	content={
 		'longitudCiclista':ciclista.longitudUltimoPunto,
 		'latitudCiclista':ciclista.latitudUltimoPunto,
+	}
+	return Response(content)
+
+@api_view(['POST','PUT', 'GET'])
+@authentication_classes((TokenAuthentication,))
+@permission_classes((IsAuthenticated,))
+def cambiarEstadoEnvio(request):
+	print 'HOLAAAAAAAAAAAAAA'
+	estado=request.POST.get('estado','')
+	id_envio=request.POST.get('id_envio','')
+	envio=Envio.objects.get(pk=id_envio)
+	envio.estado=estado
+	envio.save()
+	content={
+		'Ok': 'Ok'
 	}
 	return Response(content)
 
