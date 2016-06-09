@@ -16,6 +16,12 @@ class Anuncio(models.Model):
 
 	remitente= models.ForeignKey(Remitente)
 	descripcion=models.TextField(null = True, blank = True)
+	telefonoRemitente=models.CharField(max_length=15)
+	telefonoReceptor=models.CharField(max_length=15)
+	nombreRemitente=models.CharField(max_length=50)
+	nombreReceptor=models.CharField(max_length=50)
+	direccionRemitente=models.CharField(max_length=50)
+	direccionReceptor=models.CharField(max_length=50)
 	latitudPuntoInicial= models.CharField(max_length=50)
 	longitudPuntoInicial= models.CharField(max_length=50)
 	latitudPuntoFinal= models.CharField(max_length=50)
@@ -47,6 +53,7 @@ class Envio(models.Model):
 		('esperando', 'esperando'),
 		('enviando', 'enviando'),
 		('entregado', 'entregado'),
+		('confirmado', 'confirmado'),
 	)
 
 	estado=models.CharField(max_length=50, choices=TIPOS_ESTADOS, default='esperando')

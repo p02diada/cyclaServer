@@ -6,7 +6,7 @@ class AnuncioSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Anuncio
-        fields = ('pk', 'remitente','descripcion','latitudPuntoInicial','longitudPuntoInicial', 'latitudPuntoFinal', 'longitudPuntoFinal')
+        fields = ('pk', 'remitente','descripcion','telefonoRemitente','telefonoReceptor','nombreRemitente','nombreReceptor','direccionRemitente','direccionReceptor','latitudPuntoInicial','longitudPuntoInicial', 'latitudPuntoFinal', 'longitudPuntoFinal')
         #fields = "__all__"
 
 class OfertaSerializer(serializers.ModelSerializer):
