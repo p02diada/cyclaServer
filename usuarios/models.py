@@ -35,7 +35,8 @@ class Ciclista(User):
             email: direccion de correo
     """
     
-    valoracionMedia= models.IntegerField(null=True, blank=True)
+    valoracionMedia= models.IntegerField(null=True, blank=True, default=0)
+    cantidadValoraciones=models.IntegerField(null=True, blank=True, default=0)
     latitudUltimoPunto= models.CharField(max_length=50, null=True, blank=True)
     longitudUltimoPunto= models.CharField(max_length=50, null=True, blank=True)
 

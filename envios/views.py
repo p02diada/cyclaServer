@@ -291,6 +291,37 @@ def cambiarEstadoEnvio(request):
 	}
 	return Response(content)
 
+@api_view(['POST','PUT', 'GET'])
+@authentication_classes((TokenAuthentication,))
+@permission_classes((IsAuthenticated,))
+def cambiarValoracionCiclista(request):
+	id_ciclista=request.POST.get('id_ciclista','')
+	valoracion=request.POST.get('valoracion','')
+	ciclista=Ciclista.objects.get(pk=id_ciclista)
+	valoracionMedia=ciclista.valoracionMedia
+	valoracion=int(valoracion)
+	valoracionFinal=(valoracionMedia+valoracion)/(ciclista.cantidadValoraciones + 1)
+	ciclista.valoracionMedia=valoracionFinal
+	ciclista.cantidadValoraciones=ciclista.cantidadValoraciones+1
+	ciclista.save()
+	content={
+		'Ok': 'Ok'
+	}
+	return Response(content)
+
+@api_view(['POST','PUT', 'GET'])
+@authentication_classes((TokenAuthentication,))
+@permission_classes((IsAuthenticated,))
+def borrarAnuncio(request):
+	id_anuncio=request.POST.get('id_anuncio','')
+	anuncio=Anuncio.objects.get(pk=id_anuncio)
+	respuesta=anuncio.delete()
+	print respuesta
+	content={
+		'Ok': 'Ok'
+	}
+	return Response(content)
+
 
 class AnuncioViewSet (viewsets.ModelViewSet):
 	"""

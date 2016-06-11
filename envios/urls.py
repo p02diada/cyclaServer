@@ -19,6 +19,8 @@ urlpatterns = [
      url(r'^getOfertaPorId/$', views.getOfertaPorId),
      url(r'^getPosicionCiclistaPorId/$', views.getPosicionCiclistaPorId),
      url(r'^cambiarEstadoEnvio/$', views.cambiarEstadoEnvio),
+     url(r'^cambiarValoracionCiclista/$', views.cambiarValoracionCiclista),
+     url(r'^borrarAnuncio/$', views.borrarAnuncio),
 
 
      
