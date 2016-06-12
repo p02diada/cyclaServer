@@ -218,21 +218,27 @@ def getEnviosCiclista(request):
 
 	envios=Envio.objects.filter(oferta=ofertas)
 
-	anuncio=Anuncio.objects.get(pk=envios[0].anuncio.pk)
-	oferta=Oferta.objects.get(pk=envios[0].oferta.pk)
+	if envios:
+		anuncio=Anuncio.objects.get(pk=envios[0].anuncio.pk)
+		oferta=Oferta.objects.get(pk=envios[0].oferta.pk)
 
-	envioSer=EnvioSerializer(envios[0])
-	anuncioSer=AnuncioSerializer(anuncio)
-	ofertaSer=OfertaSerializer(oferta)
+		envioSer=EnvioSerializer(envios[0])
+		anuncioSer=AnuncioSerializer(anuncio)
+		ofertaSer=OfertaSerializer(oferta)
 
 
 
-	content={
-		'envio':envioSer.data,
-		'anuncio':anuncioSer.data,
-		'oferta':ofertaSer.data,
-	}
-	return Response(content)
+		content={
+			'envio':envioSer.data,
+			'anuncio':anuncioSer.data,
+			'oferta':ofertaSer.data,
+		}
+		return Response(content)
+	else:
+		content={
+			'respuesta':'No hay envios',
+		}
+		return Response(content)
 
 
 @api_view(['POST','PUT', 'GET'])
