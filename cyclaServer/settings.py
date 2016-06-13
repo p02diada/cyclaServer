@@ -42,7 +42,12 @@ INSTALLED_APPS = [
     'corsheaders',
     'envios',
     'usuarios',
+    'push_notifications',
 ]
+
+PUSH_NOTIFICATIONS_SETTINGS = {
+    'GCM_API_KEY': 'AIzaSyCMEuGSP0JPzAEMywX8m5M0JbnuVwKTysU',
+}
 
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
